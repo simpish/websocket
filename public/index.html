@@ -71,7 +71,7 @@
 
   $("body").on("touchmove", (event)=>{
     let targetPos = event.touches[0];
-    let position = {x:targetPos.clientX, y:targetPos.clientY, z:0};
+    let position = {x:targetPos.clientX, y:-targetPos.clientY, z:0};
     // console.log(transform);
     ws.send( JSON.stringify(position) );
   })
