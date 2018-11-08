@@ -39,7 +39,6 @@
       top: 0;
       left: 0;
     }
-
   </style>
 
 </head>
@@ -50,7 +49,6 @@
     <circle cx="25" cy="25" r="25" stroke-width="0" stroke="none" fill="#006699"  />
   </svg>
 </div>
-
 
 <script>
 
@@ -67,7 +65,7 @@
     let _pos = JSON.parse(event.data);
     TweenMax.set(targetCircle,{
       x:_pos.x-25,
-      y:_pos.y-25
+      y:-_pos.y-25
     })
   };
 
