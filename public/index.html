@@ -1,24 +1,83 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <script>
-    function send() {
-      ws.send(document.getElementById('msg').value);
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script
+    src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenMax.min.js"></script>
+
+  <style>
+    html,body{
+      width:100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
     }
-    var host = window.document.location.host.replace(/:.*/, '');
-    var ws = new WebSocket('ws://' + host + ':3000');
-    ws.onmessage = function (event) {
-      document.getElementById("messages").innerHTML += "<div>" + JSON.parse(event.data) + "</div>";
-      console.log(JSON.parse(event.data));
-    };
-  </script>
+    button{
+      width: 80%;
+      margin: 10%;
+      background-color: #eee;
+      padding: 2vh;
+      font-size: 1rem;
+    }
+    .canvas{
+      position: absolute;
+      top: 0;
+      left: 0;
+      width:100%;
+      height: 100%;
+      background:#fefefe;
+      z-index: -100;
+    }
+
+    #animatedCircle{
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+  </style>
+
 </head>
 <body>
-<strong>ws chat</strong><br>
-<input type="text" id="msg"/>
-<input type="button" value="send" onclick="send()"/>
-<br>
-<hr>
-<div id="messages"/>
+
+<div class="canvas">
+  <svg id="animatedCircle" xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50">
+    <circle cx="25" cy="25" r="25" stroke-width="0" stroke="none" fill="#006699"  />
+  </svg>
+</div>
+
+
+<script>
+
+  function send()
+  {
+    ws.send(document.getElementById('msg').value);
+  }
+
+  let targetCircle = $("#animatedCircle");
+
+  var host = window.document.location.host.replace(/:.*/, '');
+  var ws = new WebSocket('ws://' + host + ':3000');
+  ws.onmessage = function (event) {
+    let _pos = JSON.parse(event.data);
+    TweenMax.set(targetCircle,{
+      x:_pos.x-25,
+      y:_pos.y-25
+    })
+  };
+
+  $("body").on("touchmove", (event)=>{
+    let targetPos = event.touches[0];
+    let position = {x:targetPos.clientX, y:targetPos.clientY, z:0};
+    // console.log(transform);
+    ws.send( JSON.stringify(position) );
+  })
+
+</script>
 </body>
 </html>
